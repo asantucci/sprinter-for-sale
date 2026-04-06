@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>2022 Sprinter 4x4 – Unhinged Build</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="script.js"></script>
+</head>
+
+<body>
+
+<!-- HERO (PARALLAX) -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <h1 class="fade-up">2022 Sprinter 4x4</h1>
+    <p class="fade-up delay">If that’s Beast Mode,<br/>this is <strong>Unhinged.</strong></p>
+    <button onclick="scrollToSection('gallery')" class="fade-up delay-2">
+      Explore Build
+    </button>
+  </div>
+</section>
+
+<!-- STAT STRIP -->
+<section class="stats fade-up">
+  <div>58K Miles</div>
+  <div>6-Cyl Turbo Diesel</div>
+  <div>4x4 (Final Year)</div>
+  <div>$320K+ Invested</div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="gallery">
+  <h2 class="fade-up">Gallery</h2>
+  <div class="grid">
+    <img src="https://photos.app.goo.gl/UZq4ZpqvvX5yLDQJ6" onclick="openLightbox(0)">
+    <img src="https://photos.app.goo.gl/zjWeGVJqqY97zyjx7" onclick="openLightbox(1)">
+    <img src="https://photos.app.goo.gl/4HtvcRbySGFzDnvbA" onclick="openLightbox(2)">
+    <img src="https://photos.app.goo.gl/Ab6SzMJoF4xizpDR6" onclick="openLightbox(3)">
+    <img src="https://photos.app.goo.gl/tQ1MubC6kqxaJgHs9" onclick="openLightbox(4)">
+    <img src="https://photos.app.goo.gl/hBvNEzMncZfDrq176" onclick="openLightbox(5)">
+    <img src="https://photos.app.goo.gl/GYwNzapBDouHkNH47" onclick="openLightbox(6)">
+    <img src="https://photos.app.goo.gl/UGvbNej1Hf1SMLaw7" onclick="openLightbox(7)">
+    <img src="https://photos.app.goo.gl/BLqh2UaCJ6n7E37S8" onclick="openLightbox(8)">
+    <img src="https://photos.app.goo.gl/eGMTXWDssE2YUNVi9" onclick="openLightbox(9)">
+    <img src="https://photos.app.goo.gl/5d62rJztKtH8DsMU6" onclick="openLightbox(10)">
+  </div>
+</section>
+
+<!-- OVERVIEW -->
+<section class="split">
+  <div class="text fade-up">
+    <h2>Built Without Compromise</h2>
+    <p>
+      Professionally built with over $320,000 invested. Every system—
+      electrical, climate, suspension—was designed for real autonomy.
+    </p>
+  </div>
+  <div class="image parallax" style="background-image:url('assets/interior1.jpg')"></div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <h2 class="fade-up">Systems That Matter</h2>
+
+  <div class="feature-grid">
+    <div class="card fade-up">1000Ah Victron System</div>
+    <div class="card fade-up">Hydronic Heat + Hot Water</div>
+    <div class="card fade-up">Undermount AC</div>
+    <div class="card fade-up">Starlink Hardwired</div>
+    <div class="card fade-up">Fridge + Freezer</div>
+    <div class="card fade-up">Premium Audio</div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="comparison">
+  <h2 class="fade-up">A Different Tier</h2>
+
+  <div class="comparison-grid fade-up">
+    <div>
+      <h3>This Van</h3>
+      <ul>
+        <li>6-Cyl 4x4</li>
+        <li>47 Gal Fuel</li>
+        <li>Hydronic Heating</li>
+        <li>Undermount AC</li>
+        <li>Starlink Installed</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3>Typical Builds</h3>
+      <ul>
+        <li>4-Cyl AWD</li>
+        <li>Smaller Tank</li>
+        <li>Basic Heat</li>
+        <li>Rooftop AC</li>
+        <li>“Starlink Ready”</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="callout fade-up">
+    More capability. No waitlist. ~$30K less.
+  </p>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <h2 class="fade-up">Available Now</h2>
+  <p class="fade-up">Serious inquiries only.</p>
+
+  <a href="mailto:santucci.andreas@gmail.com" class="cta fade-up">
+    Contact Seller
+  </a>
+</section>
+
+<footer>
+  Truckee, CA • Clean Title • Turnkey
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <span class="close">&times;</span>
+  <img id="lightbox-img"/>
+</div>
+
+</body>
+</html>
