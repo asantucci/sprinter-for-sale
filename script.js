@@ -44,15 +44,16 @@ function openLightbox(index) {
   const lightbox = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
 
-  img.style.opacity = 0;
+  lightbox.style.display = "flex";
+  img.classList.add("hidden");
 
   const highRes = new Image();
   highRes.src = images[index];
 
   highRes.onload = () => {
     img.src = highRes.src;
-    img.style.opacity = 1;
-    lightbox.style.display = "flex";
+    img.classList.remove("hidden");
+    img.classList.add("show");
   };
 }
 
