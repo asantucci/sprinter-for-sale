@@ -4,22 +4,598 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>2022 Sprinter 4x4 – Unhinged</title>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,500;0,700;0,900;1,300&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <script defer src="script.js"></script>
+
+  <style>
+    /* ── RESET & BASE ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0a0e1a;
+      --ink:     #111827;
+      --steel:   #1e2d40;
+      --blue:    #2563eb;
+      --sky:     #60a5fa;
+      --sand:    #d4b896;
+      --off:     #f0ede8;
+      --white:   #ffffff;
+      --muted:   rgba(255,255,255,0.45);
+      --border:  rgba(255,255,255,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Barlow Condensed', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── FADE-UP ANIMATION ───────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay  { transition-delay: 0.15s; }
+    .delay-2 { transition-delay: 0.3s; }
+
+    /* ── HERO ─────────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .hero .image {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center 60%;
+      will-change: transform;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(10,14,26,0.97) 0%,
+        rgba(10,14,26,0.55) 50%,
+        rgba(10,14,26,0.15) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 6vw 5vh;
+      max-width: 900px;
+    }
+
+    .hero-content h1 {
+      font-size: clamp(3.5rem, 10vw, 9rem);
+      font-weight: 900;
+      line-height: 0.92;
+      color: var(--white);
+    }
+
+    .hero-content p {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 300;
+      color: var(--muted);
+      margin-top: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .hero-content p a {
+      color: var(--sky);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96,165,250,0.4);
+    }
+
+    .hero-content p strong { color: var(--white); font-weight: 500; }
+
+    .hero-content button {
+      margin-top: 2rem;
+      padding: 0.85rem 2.5rem;
+      background: var(--blue);
+      color: var(--white);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .hero-content button:hover { background: var(--sky); transform: translateY(-2px); }
+
+    /* ── STAT STRIP ──────────────────────────────── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats div {
+      padding: 1.6rem 2rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(0.85rem, 1.4vw, 1.1rem);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sand);
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .stats div:last-child { border-right: none; }
+
+    @media (max-width: 640px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stats div:nth-child(2) { border-right: none; }
+    }
+
+    /* ── GALLERY ─────────────────────────────────── */
+    #gallery { padding: 6rem 6vw 4rem; }
+    #gallery h2 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      color: var(--off);
+      margin-bottom: 2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 6px;
+    }
+
+    .grid img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      cursor: pointer;
+      display: block;
+      transition: opacity 0.25s, transform 0.3s;
+      filter: brightness(0.9);
+    }
+    .grid img:hover { opacity: 1; transform: scale(1.02); filter: brightness(1.05); }
+
+    /* ── OVERVIEW ────────────────────────────────── */
+    .split {
+      padding: 5rem 6vw;
+      border-top: 1px solid var(--border);
+    }
+
+    .split .text h2 {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 900;
+      color: var(--off);
+      max-width: 700px;
+    }
+
+    .split .text p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.75;
+      margin-top: 1.2rem;
+    }
+
+    /* ── VIN / VEHICLE ID ────────────────────────── */
+    .vehicle-id {
+      padding: 2rem 6vw 4rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .vin-tag {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+    }
+
+    .vin-tag span { color: var(--sky); margin-left: 0.5rem; }
+
+    /* ── FEATURES ────────────────────────────────── */
+    .features {
+      padding: 5rem 6vw;
+      background: var(--steel);
+      border-top: 1px solid var(--border);
+    }
+
+    .features h2 {
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 900;
+      color: var(--off);
+      margin-bottom: 3rem;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--border);
+    }
+
+    .card {
+      padding: 1.6rem 1.8rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--off);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      transition: background 0.2s, color 0.2s;
+    }
+    .card:hover { background: rgba(37,99,235,0.15); color: var(--sky); }
+    .card .label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+    }
+
+    /* ── BUILD RECEIPTS ──────────────────────────── */
+    .receipts {
+      padding: 5rem 6vw;
+      border-top: 1px solid var(--border);
+    }
+
+    .receipts h2 {
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 900;
+      color: var(--off);
+      margin-bottom: 0.5rem;
+    }
+
+    .receipts .intro {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 600px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .receipt-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .receipt-table thead tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .receipt-table th {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: left;
+      padding: 0.6rem 0.8rem;
+    }
+
+    .receipt-table th:last-child { text-align: right; }
+
+    .receipt-table td {
+      padding: 0.75rem 0.8rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--off);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .receipt-table td:last-child {
+      text-align: right;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      color: var(--sand);
+      white-space: nowrap;
+    }
+
+    .receipt-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .receipt-table .category-row td {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--blue);
+      padding-top: 1.5rem;
+      padding-bottom: 0.3rem;
+      border-bottom: none;
+      font-weight: 700;
+    }
+
+    .receipt-total {
+      margin-top: 1rem;
+      padding: 1.2rem 0.8rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    .receipt-total .label {
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .receipt-total .amount {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--sand);
+    }
+
+    .receipt-note {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 700px;
+    }
+
+    /* ── COMPARISON ──────────────────────────────── */
+    .comparison {
+      padding: 5rem 6vw;
+      background: var(--steel);
+      border-top: 1px solid var(--border);
+    }
+
+    .comparison h2 {
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 900;
+      color: var(--off);
+      margin-bottom: 3rem;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      border: 1px solid var(--border);
+    }
+
+    .comparison-grid > div {
+      padding: 2.5rem 2rem;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .comparison-grid > div:first-child {
+      background: rgba(37,99,235,0.08);
+      border-right: 1px solid var(--border);
+    }
+
+    .comparison-grid h3 {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--sky);
+      margin-bottom: 1.4rem;
+      letter-spacing: 0.08em;
+    }
+
+    .comparison-grid > div:last-child h3 { color: var(--muted); }
+
+    .comparison-grid ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .comparison-grid li {
+      font-size: 0.95rem;
+      color: var(--off);
+      line-height: 1.5;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .comparison-grid li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--blue);
+      font-size: 0.8rem;
+    }
+
+    .comparison-grid > div:last-child li::before { color: rgba(255,255,255,0.2); }
+    .comparison-grid > div:last-child li { color: var(--muted); }
+
+    .callout {
+      margin-top: 2.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--sand);
+    }
+
+    @media (max-width: 640px) {
+      .comparison-grid { grid-template-columns: 1fr; }
+      .comparison-grid > div:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    }
+
+    /* ── PRICING ─────────────────────────────────── */
+    .pricing {
+      padding: 6rem 6vw;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .pricing h2 {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .price {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(4rem, 12vw, 10rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+
+    .price-sub {
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    .price-context {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.3);
+      line-height: 1.8;
+    }
+
+    /* ── CONTACT ─────────────────────────────────── */
+    .contact {
+      padding: 5rem 6vw;
+      text-align: center;
+      background: var(--steel);
+      border-top: 1px solid var(--border);
+    }
+
+    .contact h2 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      color: var(--off);
+      margin-bottom: 0.8rem;
+    }
+
+    .contact p {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .cta {
+      display: inline-block;
+      padding: 1rem 3rem;
+      background: var(--blue);
+      color: var(--white);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .cta:hover { background: var(--sky); transform: translateY(-2px); }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    footer {
+      padding: 2rem 6vw;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    /* ── LIGHTBOX ────────────────────────────────── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+    .lightbox.open { display: flex; }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      box-shadow: 0 0 80px rgba(0,0,0,0.8);
+    }
+
+    .lightbox .close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      font-size: 2.5rem;
+      color: var(--muted);
+      cursor: pointer;
+      line-height: 1;
+    }
+    .lightbox .close:hover { color: var(--white); }
+
+    /* prev / next */
+    .lb-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-size: 2rem;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .lb-arrow:hover { background: rgba(255,255,255,0.15); }
+    .lb-prev { left: 1rem; }
+    .lb-next { right: 1rem; }
+  </style>
 </head>
 
 <body>
 
-<!-- HERO (PARALLAX) -->
+<!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
+  <div class="image parallax" style="background-image:url('assets/gallery/PXL_20250916_030938597.jpg')"></div>
   <div class="hero-content">
-    <h1 class="fade-up">2022 Sprinter 4x4</h1>
-    <p class="fade-up delay">If Storyteller sells a <a href="https://www.storytelleroverland.com/pages/2026-beast-mode-og?utm_medium=email&utm_source=hs_email">Beast Mode</a>,<br/>this is <strong>Unhinged.</strong></p>
-    <button onclick="scrollToSection('gallery')" class="fade-up delay-2">
-      Explore Build
-    </button>
+    <h1 class="fade-up">2022 Sprinter 4×4</h1>
+    <p class="fade-up delay">Storyteller sells a <a href="https://www.storytelleroverland.com/pages/2026-beast-mode-og?utm_medium=email&utm_source=hs_email">Beast Mode</a>,<br/>in comparison this build is <strong>Unhinged.</strong></p>
+    <button onclick="scrollToSection('gallery')" class="fade-up delay-2">Explore Build</button>
   </div>
 </section>
 
@@ -27,28 +603,28 @@
 <section class="stats fade-up">
   <div>58K Miles</div>
   <div>6-Cyl Turbo Diesel</div>
-  <div>4x4 (Final Year)</div>
+  <div>4×4 — Final Year</div>
   <div>$320K+ Invested</div>
 </section>
 
 <!-- GALLERY -->
-<section id="gallery" class="gallery">
+<section id="gallery" class="gallery" style="padding:5rem 6vw 3rem;">
   <h2 class="fade-up">Gallery</h2>
   <div class="grid">
-    <img src="assets/gallery/PXL_20220807_114229265.MP.jpg" onclick="openLightbox(0)">
-    <img src="assets/gallery/PXL_20220817_142454846.jpg" onclick="openLightbox(1)">
-    <img src="assets/gallery/PXL_20221023_005617768.jpg" onclick="openLightbox(2)">
-    <img src="assets/gallery/PXL_20221101_004348932.jpg" onclick="openLightbox(3)">
-    <img src="assets/gallery/PXL_20221119_011948746~2.jpg" onclick="openLightbox(4)">
-    <img src="assets/gallery/PXL_20230301_152043228.jpg" onclick="openLightbox(5)">
-    <img src="assets/gallery/PXL_20231013_155637336.jpg" onclick="openLightbox(6)">
-    <img src="assets/gallery/PXL_20221022_202246946.jpg" onclick="openLightbox(7)">
-    <img src="assets/gallery/PXL_20251005_184343834.jpg" onclick="openLightbox(8)">
-    <img src="assets/gallery/PXL_20251005_185557521.jpg" onclick="openLightbox(9)">
-    <img src="assets/gallery/PXL_20251005_190025405.jpg" onclick="openLightbox(10)">
-    <img src="assets/gallery/PXL_20251005_185346335.jpg" onclick="openLightbox(11)">
-    <img src="assets/gallery/PXL_20250916_030938597.jpg" onclick="openLightbox(12)">
-    <img src="assets/gallery/PXL_20231013_155705979.jpg" onclick="openLightbox(13)">
+    <img src="assets/gallery/PXL_20220807_114229265.MP.jpg"    alt="" onclick="openLightbox(0)">
+    <img src="assets/gallery/PXL_20220817_142454846.jpg"        alt="" onclick="openLightbox(1)">
+    <img src="assets/gallery/PXL_20221023_005617768.jpg"        alt="" onclick="openLightbox(2)">
+    <img src="assets/gallery/PXL_20221101_004348932.jpg"        alt="" onclick="openLightbox(3)">
+    <img src="assets/gallery/PXL_20221119_011948746~2.jpg"      alt="" onclick="openLightbox(4)">
+    <img src="assets/gallery/PXL_20230301_152043228.jpg"        alt="" onclick="openLightbox(5)">
+    <img src="assets/gallery/PXL_20231013_155637336.jpg"        alt="" onclick="openLightbox(6)">
+    <img src="assets/gallery/PXL_20221022_202246946.jpg"        alt="" onclick="openLightbox(7)">
+    <img src="assets/gallery/PXL_20251005_184343834.jpg"        alt="" onclick="openLightbox(8)">
+    <img src="assets/gallery/PXL_20251005_185557521.jpg"        alt="" onclick="openLightbox(9)">
+    <img src="assets/gallery/PXL_20251005_190025405.jpg"        alt="" onclick="openLightbox(10)">
+    <img src="assets/gallery/PXL_20251005_185346335.jpg"        alt="" onclick="openLightbox(11)">
+    <img src="assets/gallery/PXL_20250916_030938597.jpg"        alt="" onclick="openLightbox(12)">
+    <img src="assets/gallery/PXL_20231013_155705979.jpg"        alt="" onclick="openLightbox(13)">
   </div>
 </section>
 
@@ -57,25 +633,178 @@
   <div class="text fade-up">
     <h2>Built Without Compromise</h2>
     <p>
-      Professionally built with over $320,000 invested. Every system—
-      electrical, climate, suspension—was designed for real autonomy.
+      Professionally built across two premier shops—Owl Vans (Santa Rosa) and Sierra Adventure Vehicles (Truckee)—with over $320,000 in documented receipts. Every system was engineered for full autonomy: power, climate, water, connectivity.
     </p>
   </div>
-  <div class="image parallax" style="background-image:url('assets/gallery/PXL_20251005_185346335.jpg')"></div>
 </section>
+
+<!-- VIN / ID TAGS -->
+<div class="vehicle-id fade-up">
+  <div class="vin-tag">Year <span>2022</span></div>
+  <div class="vin-tag">Body <span>144" High-Roof 4×4</span></div>
+  <div class="vin-tag">Color <span>Steel Blue / Marine Blue Cabinetry</span></div>
+  <div class="vin-tag">VIN <span>W1Y4EBVY6NT083528</span></div>
+  <div class="vin-tag">Mileage <span>~58,000</span></div>
+</div>
 
 <!-- FEATURES -->
 <section class="features">
   <h2 class="fade-up">Systems That Matter</h2>
 
   <div class="feature-grid">
-    <div class="card fade-up">1000Ah Victron System</div>
-    <div class="card fade-up">Hydronic Heat + Hot Water</div>
-    <div class="card fade-up">Undermount AC</div>
-    <div class="card fade-up">Starlink Hardwired</div>
-    <div class="card fade-up">Fridge + Freezer</div>
-    <div class="card fade-up">Premium Audio</div>
+    <div class="card fade-up">
+      <span class="label">Power</span>
+      1,000 Ah Victron System
+    </div>
+    <div class="card fade-up">
+      <span class="label">Climate — Heat</span>
+      Rixens Hydronic + Airtronic Backup
+    </div>
+    <div class="card fade-up">
+      <span class="label">Climate — Cool</span>
+      Cruise n Comfort 12v Undermount AC
+    </div>
+    <div class="card fade-up">
+      <span class="label">Connectivity</span>
+      Starlink V2 Flatmount, Hardwired
+    </div>
+    <div class="card fade-up">
+      <span class="label">Cold Storage</span>
+      Perlick Fridge + Freezer
+    </div>
+    <div class="card fade-up">
+      <span class="label">Audio</span>
+      Audison 8-ch Amp + Ethereal Speakers
+    </div>
+    <div class="card fade-up">
+      <span class="label">Kitchen</span>
+      2-Burner Induction + Ruvati Sink
+    </div>
+    <div class="card fade-up">
+      <span class="label">Bath</span>
+      Pop-Up Shower + Outdoor Shower
+    </div>
+    <div class="card fade-up">
+      <span class="label">Entertainment</span>
+      27" 4K TV, Quick-Release Bracket
+    </div>
+    <div class="card fade-up">
+      <span class="label">Fuel</span>
+      Owl S&B 47-Gal Tank (2× stock)
+    </div>
+    <div class="card fade-up">
+      <span class="label">Suspension</span>
+      VanCompass Stage 4.5 + Falcon 3.3
+    </div>
+    <div class="card fade-up">
+      <span class="label">Seating</span>
+      Scheel-Mann Vario F Klima Seats
+    </div>
+    <div class="card fade-up">
+      <span class="label">Security</span>
+      Compustar T13, GPS, Remote Start
+    </div>
+    <div class="card fade-up">
+      <span class="label">Garage</span>
+      Slide-Out MTB Tray + Owl B2 Carrier
+    </div>
+    <div class="card fade-up">
+      <span class="label">Recovery</span>
+      Maxtrax + Owl ARB Onboard Air L2
+    </div>
+    <div class="card fade-up">
+      <span class="label">Cabinetry</span>
+      Baltic Birch, Marine Blue Paint
+    </div>
   </div>
+</section>
+
+<!-- BUILD RECEIPTS -->
+<section class="receipts">
+  <h2 class="fade-up">Documented Build Costs</h2>
+  <p class="intro fade-up">
+    Every major component is receipted. Total receipts on file: <strong style="color:var(--sand)">$320,995</strong>. Approximately $30k of that is professional labor at Owl Vans (Santa Rosa) and Sierra Adventure Vehicles (Truckee). MB service at San Mateo, CA and Reno, NV.
+  </p>
+
+  <table class="receipt-table fade-up">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th style="text-align:right">Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- POWER -->
+      <tr class="category-row"><td colspan="2">Power &amp; Electrical</td></tr>
+      <tr><td>Victron Battery System Overhaul — 1,000 Ah</td><td>$15,427</td></tr>
+
+      <!-- CLIMATE -->
+      <tr class="category-row"><td colspan="2">Climate Control</td></tr>
+      <tr><td>Rixens Espar Hydronic MCS7 S3 Diesel Furnace w/ Hot Water + Engine Heat</td><td>$10,600</td></tr>
+      <tr><td>Cruise n Comfort 12v DC-Powered HD Undermount Air Conditioning</td><td>—</td></tr>
+
+      <!-- DRIVETRAIN / CHASSIS -->
+      <tr class="category-row"><td colspan="2">Drivetrain &amp; Chassis</td></tr>
+      <tr><td>VanCompass Stage 4.5 Suspension w/ Falcon 3.3 Adjustable Shocks</td><td>$4,470</td></tr>
+      <tr><td>Scheel-Mann Vario F Klima Seats</td><td>$10,442</td></tr>
+
+      <!-- OWL ACCESSORIES -->
+      <tr class="category-row"><td colspan="2">Owl Vans Accessories</td></tr>
+      <tr><td>S&amp;B 47-Gallon Fuel Tank w/ Large Diesel Filler</td><td>$3,394</td></tr>
+      <tr><td>Alpine 2.0 Ski Box</td><td>$2,498</td></tr>
+      <tr><td>B2 Carrier VS30</td><td>$1,895</td></tr>
+      <tr><td>Side Steps</td><td>$1,995</td></tr>
+      <tr><td>Nova Series LED Projectors (AlphaRex)</td><td>$1,650</td></tr>
+      <tr><td>Rear Storage Locker (Fender)</td><td>$429</td></tr>
+      <tr><td>+ ARB Onboard Air System — Level 2</td><td>$1,495</td></tr>
+      <tr><td>Stainless Exhaust</td><td>$899</td></tr>
+      <tr><td>Hood Strut Kit</td><td>$149</td></tr>
+      <tr><td>Grill Lighting</td><td>$799</td></tr>
+      <tr><td>Horn Upgrade</td><td>$159</td></tr>
+      <tr><td>Gear Rail Accessory Holder</td><td>$448</td></tr>
+      <tr><td>Fog Light Upgrade (Baja Designs)</td><td>$445</td></tr>
+
+      <!-- TECH / CONNECTIVITY -->
+      <tr class="category-row"><td colspan="2">Tech &amp; Connectivity</td></tr>
+      <tr><td>Starlink V2 Flatmounted to Roof, Hardwired Interior Switch</td><td>—</td></tr>
+      <tr><td>27" 4K TV w/ Quick-Release Bracket</td><td>—</td></tr>
+      <tr><td>RennTech Always-On Rear Camera</td><td>$480</td></tr>
+      <tr><td>Compustar T13 Security, Drone Mobile GPS, Remote Start + Global Unlock</td><td>$890</td></tr>
+      <tr><td>Audison AP8.9 BIT 8-Channel Amplifier + Audison Ethereal Speakers</td><td>$1,295</td></tr>
+
+      <!-- INTERIOR / LIVING -->
+      <tr class="category-row"><td colspan="2">Interior &amp; Living</td></tr>
+      <tr><td>Baltic Birch Cabinetry — Marine Blue Paint</td><td>—</td></tr>
+      <tr><td>Perlick Fridge + Freezer Combination</td><td>—</td></tr>
+      <tr><td>2-Burner Induction Stovetop</td><td>—</td></tr>
+      <tr><td>Ruvati Sink w/ Designer Faucet</td><td>—</td></tr>
+      <tr><td>Pop-Up Shower w/ Designer Spray Handle + Outdoor Shower</td><td>—</td></tr>
+      <tr><td>Water Filtration System</td><td>—</td></tr>
+      <tr><td>Custom Drop-Down Tables (×2 — footrest + outdoor)</td><td>—</td></tr>
+      <tr><td>Dimmable LED Lighting Throughout + Exterior Lighting</td><td>—</td></tr>
+      <tr><td>3+ In-Cabin 110v Outlets + 1 Garage Outlet</td><td>—</td></tr>
+      <tr><td>Trelino Composting Toilet</td><td>$450</td></tr>
+      <tr><td>XplrOutfitters Insulating + Magnetic Window Covers (6-pc)</td><td>$1,115</td></tr>
+      <tr><td>Bug Wall</td><td>$961</td></tr>
+      <tr><td>Nomad Vanz Rear Door Pocket Storage</td><td>$920</td></tr>
+      <tr><td>Fender Flares w/ Sprinter Mattress Built-to-Fit</td><td>—</td></tr>
+
+      <!-- GARAGE / ADVENTURE -->
+      <tr class="category-row"><td colspan="2">Garage &amp; Adventure</td></tr>
+      <tr><td>Slide-Out MTB Tray Inside Garage</td><td>—</td></tr>
+      <tr><td>Rotopax Fuel Storage System</td><td>$459</td></tr>
+      <tr><td>Maxtrax w/ Owl Sidestep Mount</td><td>$682</td></tr>
+    </tbody>
+  </table>
+
+  <div class="receipt-total fade-up">
+    <div class="label">Total Receipts on File (Build + Labor)</div>
+    <div class="amount">$320,995</div>
+  </div>
+
+  <p class="receipt-note fade-up">
+    "—" indicates cost included within larger build packages or labor invoices. All major components have corresponding receipts available to serious buyers. ~$30k of total reflects professional installation labor at Owl Vans (Santa Rosa, CA) and Sierra Adventure Vehicles (Truckee, CA). Mechanical service at Mercedes-Benz San Mateo, CA and Reno, NV.
+  </p>
 </section>
 
 <!-- COMPARISON -->
@@ -86,23 +815,26 @@
     <div>
       <h3>This Van</h3>
       <ul>
-        <li>6-Cyl 4x4</li>
-        <li>47 Gal Fuel</li>
-        <li>Rixens Hydronic Heating, with an Airtronic as spare</li>
-        <li>Undermount AC</li>
-        <li>Starlink Installed and Hardwired/li>
-        <li>Premium Audio, Owl Accessories, all included</li>
+        <li>6-Cyl 4×4 — final model year of true 4×4 platform</li>
+        <li>47-Gal Fuel Tank — nearly 2× stock, fewer stops</li>
+        <li>Rixens Hydronic Heat — hot water + engine heat integration, with Airtronic as backup</li>
+        <li>Undermount AC — cools more efficiently, lower battery draw</li>
+        <li>Starlink V2 hardwired with interior on/off switch — not "Starlink ready"</li>
+        <li>Full Audison premium audio system included</li>
+        <li>All Owl Vans accessories included — no à la carte add-ons</li>
       </ul>
     </div>
 
     <div>
       <h3>Typical Builds</h3>
       <ul>
-        <li>4-Cyl AWD</li>
-        <li>24 Gal Fuel Tank - expensive and frequent fuel stops</li>
-        <li>Espar Airtronic</li>
-        <li>Rooftop AC (doesn't cool as effectively, uses more battery power)</li>
-        <li>“Starlink Ready”</li>
+        <li>4-Cyl AWD — less torque, no true 4×4</li>
+        <li>24-Gal stock tank — expensive and frequent fuel stops</li>
+        <li>Espar Airtronic only — no hydronic, no hot water loop</li>
+        <li>Rooftop AC — less effective cooling, higher power draw</li>
+        <li>"Starlink Ready" — you still need to buy and install it</li>
+        <li>Basic audio or none</li>
+        <li>Accessories sold separately, often not installed</li>
       </ul>
     </div>
   </div>
@@ -112,18 +844,14 @@
   </p>
 </section>
 
+<!-- PRICING -->
 <section class="pricing fade-up">
   <h2>Asking Price</h2>
-
   <div class="price">$195,000</div>
-
-  <p class="price-sub">
-    Open to reasonable offers. Serious buyers only.
-  </p>
-
+  <p class="price-sub">Open to reasonable offers. Serious buyers only.</p>
   <p class="price-context">
-    Over $320K invested in build + components.<br/>
-    Turnkey, no waitlist, last-year 4x4 platform.
+    Over $320K documented in build + components.<br/>
+    Turnkey. No waitlist. Last-year true 4×4 platform.
   </p>
 </section>
 
@@ -131,21 +859,93 @@
 <section id="contact" class="contact">
   <h2 class="fade-up">Available Now</h2>
   <p class="fade-up">Serious inquiries only.</p>
-
-  <a href="mailto:santucci.andreas@gmail.com" class="cta fade-up">
-    Contact Seller
-  </a>
+  <a href="mailto:santucci.andreas@gmail.com" class="cta fade-up">Contact Seller</a>
 </section>
 
 <footer>
-  Located in Northern California • Clean Title • Turnkey
+  Located in Northern California &nbsp;•&nbsp; Clean Title &nbsp;•&nbsp; Turnkey
 </footer>
 
 <!-- LIGHTBOX -->
-<div id="lightbox" class="lightbox" onclick="closeLightbox()">
-  <span class="close">&times;</span>
-  <img id="lightbox-img"/>
+<div id="lightbox" class="lightbox" onclick="closeLightboxOutside(event)">
+  <span class="close" onclick="closeLightbox()">&times;</span>
+  <button class="lb-arrow lb-prev" onclick="event.stopPropagation(); prevImage()">&#8592;</button>
+  <img id="lightbox-img" alt=""/>
+  <button class="lb-arrow lb-next" onclick="event.stopPropagation(); nextImage()">&#8594;</button>
 </div>
+
+<script>
+  // ── FADE-UP OBSERVER ──────────────────────────
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // ── PARALLAX ──────────────────────────────────
+  const heroBg = document.querySelector('.hero .image');
+  window.addEventListener('scroll', () => {
+    if (heroBg) heroBg.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+  }, { passive: true });
+
+  // ── SCROLL TO ─────────────────────────────────
+  function scrollToSection(id) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ── LIGHTBOX ──────────────────────────────────
+  const images = [
+    'assets/gallery/PXL_20220807_114229265.MP.jpg',
+    'assets/gallery/PXL_20220817_142454846.jpg',
+    'assets/gallery/PXL_20221023_005617768.jpg',
+    'assets/gallery/PXL_20221101_004348932.jpg',
+    'assets/gallery/PXL_20221119_011948746~2.jpg',
+    'assets/gallery/PXL_20230301_152043228.jpg',
+    'assets/gallery/PXL_20231013_155637336.jpg',
+    'assets/gallery/PXL_20221022_202246946.jpg',
+    'assets/gallery/PXL_20251005_184343834.jpg',
+    'assets/gallery/PXL_20251005_185557521.jpg',
+    'assets/gallery/PXL_20251005_190025405.jpg',
+    'assets/gallery/PXL_20251005_185346335.jpg',
+    'assets/gallery/PXL_20250916_030938597.jpg',
+    'assets/gallery/PXL_20231013_155705979.jpg',
+  ];
+
+  let currentIndex = 0;
+
+  function openLightbox(i) {
+    currentIndex = i;
+    document.getElementById('lightbox-img').src = images[i];
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeLightboxOutside(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    document.getElementById('lightbox-img').src = images[currentIndex];
+  }
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    document.getElementById('lightbox-img').src = images[currentIndex];
+  }
+
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') prevImage();
+    if (e.key === 'ArrowRight') nextImage();
+  });
+</script>
 
 </body>
 </html>
