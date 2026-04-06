@@ -38,14 +38,22 @@ const images = [
 ];
 
 let currentIndex = 0;
-
 function openLightbox(index) {
   currentIndex = index;
+
   const lightbox = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
 
-  img.src = images[index];
-  lightbox.style.display = "flex";
+  img.style.opacity = 0;
+
+  const highRes = new Image();
+  highRes.src = images[index];
+
+  highRes.onload = () => {
+    img.src = highRes.src;
+    img.style.opacity = 1;
+    lightbox.style.display = "flex";
+  };
 }
 
 function closeLightbox() {
