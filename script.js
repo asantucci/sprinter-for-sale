@@ -30,11 +30,20 @@ function scrollToSection(id) {
 
 // LIGHTBOX
 const images = [
-  "assets/gallery/1.jpg",
-  "assets/gallery/2.jpg",
-  "assets/gallery/3.jpg",
-  "assets/gallery/4.jpg",
-  "assets/gallery/5.jpg"
+  "assets/gallery/PXL_20220807_114229265.MP.jpg",
+  "assets/gallery/PXL_20220817_142454846.jpg",
+  "assets/gallery/PXL_20221023_005617768.jpg",
+  "assets/gallery/PXL_20221101_004348932.jpg",
+  "assets/gallery/PXL_20221119_011948746~2.jpg",
+  "assets/gallery/PXL_20230301_152043228.jpg",
+  "assets/gallery/PXL_20231013_155637336.jpg",
+  "assets/gallery/PXL_20221022_202246946.jpg",
+  "assets/gallery/PXL_20251005_184343834.jpg",
+  "assets/gallery/PXL_20251005_185557521.jpg",
+  "assets/gallery/PXL_20251005_190025405.jpg",
+  "assets/gallery/PXL_20251005_185346335.jpg",
+  "assets/gallery/PXL_20250916_030938597.jpg",
+  "assets/gallery/PXL_20231013_155705979.jpg"
 ];
 
 let currentIndex = 0;
