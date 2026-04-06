@@ -203,3 +203,30 @@ button {
   transform: scale(0.98);
   opacity: 0;
 }
+
+/* ================================
+   PRICING (PREMIUM LOOK)
+   ================================ */
+
+.pricing {
+  text-align: center;
+  padding: 100px 20px;
+  background: #000;
+}
+
+.price {
+  font-size: 3.5rem;
+  font-weight: 600;
+  margin: 20px 0;
+}
+
+.price-sub {
+  color: #aaa;
+  font-size: 1.1rem;
+}
+
+.price-context {
+  margin-top: 15px;
+  color: #777;
+  font-size: 0.95rem;
+}
